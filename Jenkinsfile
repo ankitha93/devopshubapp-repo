@@ -2,10 +2,8 @@ pipeline {
     agent { label 'serverB' }
 
     environment {
-        // Set Docker Hub credentials and image name
         DOCKER_IMAGE_NAME = 'ankitha702/devopshubapp'
-        // DOCKER_HUB_REPO = 'ankitha702/devopshubapp'
-        DOCKER_CREDENTIALS_ID = 'dockerhub' // Jenkins credential ID for Docker Hub
+        DOCKER_CREDENTIALS_ID = 'dockerhub'
     }
 
     stages {
@@ -24,7 +22,6 @@ pipeline {
         stage('Docker Image Creation') {
             steps {
                 script {
-                    // Just preparing Dockerfile, context, or any required pre-steps
                     echo 'Docker image files are ready'
                 }
             }
@@ -43,25 +40,25 @@ pipeline {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', "${DOCKER_CREDENTIALS_ID}") {
                         dockerImage.push()
-                        dockerImage.push('latest') // Optional: tag as latest
+                        dockerImage.push('latest')
                     }
+                }
+            }
+        }
+
+        stage('Run Container') {
+            steps {
+                script {
+                    sh '''
+                        docker stop devopshubapp-container || true
+                        docker rm devopshubapp-container || true
+                        docker run -d --name devopshubapp-container -p 8080:8080 ankitha702/devopshubapp:${BUILD_NUMBER}
+                    '''
                 }
             }
         }
     }
 
-    stage('Run Container') {
-    steps {
-        script {
-            sh '''
-                docker stop devopshubapp-container || true
-                docker rm devopshubapp-container || true
-                docker run -d --name devopshubapp-container -p 8080:8080 ankitha702/devopshubapp:12
-            '''
-        }
-    }
-}
-   
     post {
         success {
             echo "Build and Docker image published successfully."
