@@ -1,16 +1,16 @@
 pipeline {
-    agent any
+    agent { label 'serverB' }
 
     environment {
         // Set Docker Hub credentials and image name
-        DOCKER_IMAGE_NAME = 'your-dockerhub-username/your-image-name'
-        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials-id' // Jenkins credential ID for Docker Hub
+        DOCKER_IMAGE_NAME = 'ankitha702/myapp'
+        DOCKER_CREDENTIALS_ID = 'dockerhub' // Jenkins credential ID for Docker Hub
     }
 
     stages {
         stage('Code Checkout') {
             steps {
-                git url: 'https://github.com/your-repo/your-project.git', branch: 'main'
+                git url: 'https://github.com/ankitha93/devopshubapp-repo.git', branch: 'main'
             }
         }
 
