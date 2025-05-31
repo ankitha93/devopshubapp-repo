@@ -50,6 +50,24 @@ pipeline {
         }
     }
 
+    stage('Run Container') {
+            steps {
+                script {
+                    // Stop & remove existing container if any
+                    sh """
+                        docker stop ${CONTAINER_NAME} || true
+                        docker rm ${CONTAINER_NAME} || true
+                    """
+
+                    // Run a new container
+                    sh """
+                        docker run -d --name ${CONTAINER_NAME} -p ${CONTAINER_PORT}:8080 ${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}
+                    """
+                }
+            }
+        }
+    }
+
     post {
         success {
             echo "Build and Docker image published successfully."
