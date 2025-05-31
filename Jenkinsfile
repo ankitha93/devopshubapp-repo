@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         // Set Docker Hub credentials and image name
-        DOCKER_IMAGE_NAME = 'ankitha702/myapp'
+        DOCKER_IMAGE_NAME = 'ankitha702/myimage'
         DOCKER_CREDENTIALS_ID = 'dockerhub' // Jenkins credential ID for Docker Hub
     }
 
